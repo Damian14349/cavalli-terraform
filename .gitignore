@@ -1,0 +1,44 @@
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+
+# Ignore override files as they are usually managed manually
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ignore local .terraform directories
+**/.terraform/*
+
+# Sensitive and temporary files
+*.tfvars
+*.tfvars.json
+
+# .DS_Store (for macOS users)
+.DS_Store
+
+# Log files
+*.log
+
+# SSH Key files (you might have SSH keys stored in your repo)
+*.pem
+*.key
+
+# Ignore any secrets files that might have been created for environments
+secrets.yaml
+secrets.yml
+
+# Temporary files
+*.swp
+*.bak
+*.tmp
+
+Damian_accessKeys.csv
