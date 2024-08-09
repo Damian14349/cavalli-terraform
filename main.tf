@@ -20,55 +20,85 @@ data "aws_subnets" "default" {
   }
 }
 
-module "s3" {
-  source      = "./modules/s3"
-  domain_name = var.domain_name
+# Fetch existing ACM certificates
+data "aws_acm_certificate" "alb" {
+  domain   = var.domain_name
+  statuses = ["ISSUED"]
+  most_recent = true
 }
 
-module "acm" {
-  source          = "./modules/acm"
-  domain_name     = var.domain_name
-
-  # Pass the manually created zone ID
-  route53_zone_id = "YOUR_ROUTE53_ZONE_ID"
+data "aws_acm_certificate" "cloudfront" {
+  provider = aws.us-east-1
+  domain   = var.domain_name
+  statuses = ["ISSUED"]
+  most_recent = true
 }
 
-module "ec2" {
-  source    = "./modules/ec2"
-  ami_id    = var.ami_id
-  subnet_id = data.aws_subnets.default.ids[0]
+# Declare whether to use existing security group
+locals {
+  use_existing_sg = var.use_existing_sg
+}
+
+resource "aws_security_group" "alb_sg" {
+  count       = local.use_existing_sg ? 0 : 1
+  name        = "allow_http_https_terraform"
+  description = "Allow HTTP and HTTPS traffic to ALB"
+  vpc_id      = data.aws_vpc.default.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+data "aws_security_group" "existing_sg" {
+  count = local.use_existing_sg ? 1 : 0
+  filter {
+    name   = "group-name"
+    values = [var.existing_sg_name] # Make sure this variable is set if using existing SG
+  }
+  vpc_id = data.aws_vpc.default.id
 }
 
 module "alb" {
   source     = "./modules/alb"
   vpc_id     = data.aws_vpc.default.id
   subnet_ids = data.aws_subnets.default.ids
-
-  # Use manually created ACM certificate for ALB
-  cert_arn   = "YOUR_ACM_CERT_ARN_EU_CENTRAL_1"
+  cert_arn   = data.aws_acm_certificate.alb.arn
+  sg_id      = local.use_existing_sg ? data.aws_security_group.existing_sg[0].id : aws_security_group.alb_sg[0].id
 }
 
 module "asg" {
   source     = "./modules/asg"
   ami_id     = var.ami_id
   subnet_ids = data.aws_subnets.default.ids
+  sg_id      = local.use_existing_sg ? data.aws_security_group.existing_sg[0].id : aws_security_group.alb_sg[0].id
 }
 
 module "cloudfront" {
-  source      = "./modules/cloudfront"
-  s3_bucket   = module.s3.bucket_id
-
-  # Use manually created ACM certificate for CloudFront
-  cert_arn    = "YOUR_ACM_CERT_ARN_US_EAST_1"
-  domain_name = var.domain_name
-  oai_id      = module.s3.oai_id
+  source         = "./modules/cloudfront"
+  alb_origin_dns = module.alb.dns_name  # ALB DNS as primary origin
+  cert_arn       = data.aws_acm_certificate.cloudfront.arn
+  domain_name    = var.domain_name
 }
 
-module "route53" {
-  source         = "./modules/route53"
-  domain_name    = var.domain_name
-  cf_domain_name = module.cloudfront.cf_domain_name
-
-  # Use the manually created zone ID
-  zone_id        = "YOUR_ROUTE53_ZONE_ID"
+module "s3" {
+  source      = "./modules/s3"
+  domain_name = var.domain_name
 }

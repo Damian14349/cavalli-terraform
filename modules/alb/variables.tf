@@ -1,14 +1,19 @@
-variable "subnet_ids" {
-  description = "The subnet IDs for the ALB."
-  type        = list(string)
-}
-
 variable "vpc_id" {
-  description = "The VPC ID."
+  description = "The VPC ID where the ALB will be deployed."
   type        = string
 }
 
+variable "subnet_ids" {
+  description = "The subnets where the ALB will be deployed."
+  type        = list(string)
+}
+
 variable "cert_arn" {
-  description = "The ARN of the ACM certificate to use for HTTPS."
+  description = "The ARN of the ACM certificate for HTTPS."
+  type        = string
+}
+
+variable "sg_id" {
+  description = "The ID of the security group for ALB."
   type        = string
 }

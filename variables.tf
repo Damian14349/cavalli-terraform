@@ -5,10 +5,21 @@ variable "region" {
 
 variable "domain_name" {
   description = "The domain name to use."
-  default     = "cavalli.com.pl"
+  default     = "devopser.pl"
 }
 
 variable "ami_id" {
   description = "The AMI ID for EC2 instances."
-  default     = "ami-083c806d346039a38"
+  default     = "ami-0cdce8cdcb7995d0b"
+}
+
+variable "use_existing_sg" {
+  description = "Set to true if you want to use an existing security group."
+  type        = bool
+  default     = false
+}
+
+variable "existing_sg_name" {
+  description = "The name of the existing security group to use."
+  default     = "allow_http_https"
 }

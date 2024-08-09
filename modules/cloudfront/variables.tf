@@ -1,5 +1,5 @@
-variable "s3_bucket" {
-  description = "The S3 bucket domain name."
+variable "alb_origin_dns" {
+  description = "The DNS name of the ALB to be used as the CloudFront origin."
   type        = string
 }
 
@@ -10,10 +10,5 @@ variable "cert_arn" {
 
 variable "domain_name" {
   description = "The domain name for the CloudFront distribution."
-  type        = string
-}
-
-variable "oai_id" {
-  description = "The ID of the CloudFront Origin Access Identity."
   type        = string
 }

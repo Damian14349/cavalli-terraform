@@ -1,9 +1,9 @@
 variable "ami_id" {
-  description = "The AMI ID for EC2 instances."
+  description = "The AMI ID for the EC2 instance."
   type        = string
 }
 
 variable "subnet_id" {
-  description = "The subnet ID where the instance will be created."
+  description = "The subnet ID for the EC2 instance."
   type        = string
 }
