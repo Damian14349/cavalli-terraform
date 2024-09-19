@@ -102,3 +102,24 @@ module "s3" {
   source      = "./modules/s3"
   domain_name = var.domain_name
 }
+
+# New modules for dynamic content
+
+module "lambda" {
+  source = "./modules/lambda"
+  bucket = var.lambda_bucket
+  zip_key = var.lambda_zip_key
+}
+
+module "apigateway" {
+  source = "./modules/apigateway"
+  lambda_function_arn = module.lambda.lambda_function_arn
+}
+
+module "dynamodb" {
+  source = "./modules/dynamodb"
+}
+
+module "cognito" {
+  source = "./modules/cognito"
+}

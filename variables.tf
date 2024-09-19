@@ -23,3 +23,13 @@ variable "existing_sg_name" {
   description = "The name of the existing security group to use."
   default     = "allow_http_https"
 }
+
+variable "lambda_bucket" {
+  description = "The S3 bucket where Lambda function code is stored."
+  default     = "lambda-code-bucket"
+}
+
+variable "lambda_zip_key" {
+  description = "The key in S3 bucket where Lambda code zip file is stored."
+  default     = "lambda.zip"
+}
