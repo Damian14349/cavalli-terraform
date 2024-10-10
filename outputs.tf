@@ -15,20 +15,20 @@ output "cloudfront_domain_name" {
 
 output "lambda_function_name" {
   description = "The name of the Lambda function."
-  value       = aws_lambda_function.backend.function_name
+  value       = module.lambda.lambda_function_name
 }
 
 output "api_gateway_url" {
   description = "The URL of the API Gateway."
-  value       = aws_api_gateway_rest_api.api.execution_arn
+  value       = module.apigateway.api_gateway_url
 }
 
 output "dynamodb_table_name" {
   description = "The name of the DynamoDB table."
-  value       = aws_dynamodb_table.events.name
+  value       = module.dynamodb.table_name
 }
 
 output "cognito_user_pool_id" {
   description = "The ID of the Cognito user pool."
-  value       = aws_cognito_user_pool.user_pool.id
+  value       = module.cognito.user_pool_id
 }

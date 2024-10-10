@@ -22,15 +22,15 @@ data "aws_subnets" "default" {
 
 # Fetch existing ACM certificates
 data "aws_acm_certificate" "alb" {
-  domain   = var.domain_name
-  statuses = ["ISSUED"]
+  domain      = var.domain_name
+  statuses    = ["ISSUED"]
   most_recent = true
 }
 
 data "aws_acm_certificate" "cloudfront" {
-  provider = aws.us-east-1
-  domain   = var.domain_name
-  statuses = ["ISSUED"]
+  provider    = aws.us-east-1
+  domain      = var.domain_name
+  statuses    = ["ISSUED"]
   most_recent = true
 }
 
@@ -71,7 +71,7 @@ data "aws_security_group" "existing_sg" {
   count = local.use_existing_sg ? 1 : 0
   filter {
     name   = "group-name"
-    values = [var.existing_sg_name] # Make sure this variable is set if using existing SG
+    values = [var.existing_sg_name]
   }
   vpc_id = data.aws_vpc.default.id
 }
@@ -93,7 +93,7 @@ module "asg" {
 
 module "cloudfront" {
   source         = "./modules/cloudfront"
-  alb_origin_dns = module.alb.dns_name  # ALB DNS as primary origin
+  alb_origin_dns = module.alb.dns_name
   cert_arn       = data.aws_acm_certificate.cloudfront.arn
   domain_name    = var.domain_name
 }
@@ -105,21 +105,27 @@ module "s3" {
 
 # New modules for dynamic content
 
-module "lambda" {
-  source = "./modules/lambda"
-  bucket = var.lambda_bucket
-  zip_key = var.lambda_zip_key
-}
-
-module "apigateway" {
-  source = "./modules/apigateway"
-  lambda_function_arn = module.lambda.lambda_function_arn
-}
-
 module "dynamodb" {
   source = "./modules/dynamodb"
 }
 
+module "lambda" {
+  source         = "./modules/lambda"
+  bucket         = var.lambda_bucket
+  zip_key        = var.lambda_zip_key
+  iam_role_arn   = module.lambda_iam.iam_role_arn
+  dynamodb_table = module.dynamodb.table_name
+}
+
+module "apigateway" {
+  source              = "./modules/apigateway"
+  lambda_function_arn = module.lambda.lambda_function_arn
+}
+
 module "cognito" {
   source = "./modules/cognito"
+}
+
+module "lambda_iam" {
+  source = "./modules/lambda_iam"
 }

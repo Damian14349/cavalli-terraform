@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "lambda_function" {
   function_name = "backend-function"
-  role          = aws_iam_role.lambda_exec.arn
+  role          = var.iam_role_arn
   handler       = "index.handler"
   runtime       = "nodejs14.x"
   s3_bucket     = var.bucket
@@ -8,7 +8,7 @@ resource "aws_lambda_function" "lambda_function" {
 
   environment {
     variables = {
-      DYNAMODB_TABLE = module.dynamodb.table_name
+      DYNAMODB_TABLE = var.dynamodb_table  # Używamy przekazanej zmiennej dynamodb_table
     }
   }
 }
