@@ -13,20 +13,10 @@ output "cloudfront_domain_name" {
   value       = module.cloudfront.cf_domain_name
 }
 
-output "lambda_function_name" {
-  description = "The name of the Lambda function."
-  value       = module.lambda.lambda_function_name
-}
-
-output "api_gateway_url" {
-  description = "The URL of the API Gateway."
-  value       = module.apigateway.api_gateway_url
-}
-
-output "dynamodb_table_name" {
-  description = "The name of the DynamoDB table."
-  value       = module.dynamodb.table_name
-}
+# output "api_gateway_url" {
+#   description = "The URL of the API Gateway."
+#   value       = module.apigateway.api_gateway_url
+# }
 
 output "cognito_user_pool_id" {
   description = "The ID of the Cognito user pool."

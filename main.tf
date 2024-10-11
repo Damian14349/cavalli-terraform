@@ -67,6 +67,15 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name       = "wordpress-db-subnet-group"
+  subnet_ids = data.aws_subnets.default.ids
+
+  tags = {
+    Name = "WordPress DB Subnet Group"
+  }
+}
+
 data "aws_security_group" "existing_sg" {
   count = local.use_existing_sg ? 1 : 0
   filter {
@@ -103,29 +112,20 @@ module "s3" {
   domain_name = var.domain_name
 }
 
-# New modules for dynamic content
-
-module "dynamodb" {
-  source = "./modules/dynamodb"
+module "rds" {
+  source                 = "./modules/rds"
+  db_instance_class      = var.db_instance_class
+  db_name                = var.db_name
+  db_user                = var.db_user
+  db_password            = var.db_password
+  vpc_security_group_ids = local.use_existing_sg ? [data.aws_security_group.existing_sg[0].id] : [aws_security_group.alb_sg[0].id]  # Zmienna do przekazania SG
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name  # Zmienna do przekazania Subnet Group
 }
 
-module "lambda" {
-  source         = "./modules/lambda"
-  bucket         = var.lambda_bucket
-  zip_key        = var.lambda_zip_key
-  iam_role_arn   = module.lambda_iam.iam_role_arn
-  dynamodb_table = module.dynamodb.table_name
-}
-
-module "apigateway" {
-  source              = "./modules/apigateway"
-  lambda_function_arn = module.lambda.lambda_function_arn
-}
+# module "apigateway" {
+#   source              = "./modules/apigateway"
+# }
 
 module "cognito" {
   source = "./modules/cognito"
-}
-
-module "lambda_iam" {
-  source = "./modules/lambda_iam"
 }

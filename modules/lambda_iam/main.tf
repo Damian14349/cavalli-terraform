@@ -16,7 +16,7 @@ resource "aws_iam_role" "lambda_exec" {
 resource "aws_iam_policy_attachment" "lambda_attach" {
   name       = "lambda_policy_attachment"
   roles      = [aws_iam_role.lambda_exec.name]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaFullAccess" 
 }
 
 output "iam_role_arn" {

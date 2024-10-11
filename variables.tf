@@ -34,23 +34,6 @@ variable "lambda_zip_key" {
   default     = "lambda.zip"
 }
 
-# Nowe zmienne dla nowych modułów (Lambda, DynamoDB, Cognito)
-
-variable "dynamodb_table" {
-  description = "The name of the DynamoDB table."
-  default     = "events"
-}
-
-variable "lambda_function_name" {
-  description = "The name of the Lambda function."
-  default     = "backend-function"
-}
-
-variable "lambda_runtime" {
-  description = "The runtime for the Lambda function (e.g., nodejs14.x)."
-  default     = "nodejs14.x"
-}
-
 variable "cognito_user_pool_name" {
   description = "The name of the Cognito User Pool."
   default     = "events-user-pool"
@@ -59,4 +42,24 @@ variable "cognito_user_pool_name" {
 variable "cognito_user_pool_client_name" {
   description = "The name of the Cognito User Pool Client."
   default     = "events-user-pool-client"
+}
+
+variable "db_instance_class" {
+  description = "Class of the RDS instance"
+  default     = "db.t3.micro"  # Możesz dostosować do swojego przypadku
+}
+
+variable "db_name" {
+  description = "The name of the database"
+  default     = "wordpress"
+}
+
+variable "db_user" {
+  description = "Database username"
+  default     = "admin"
+}
+
+variable "db_password" {
+  description = "The password for the database"
+  default     = "password"  # Zaktualizuj zgodnie z wymaganiami
 }
