@@ -33,6 +33,7 @@ resource "aws_cloudfront_distribution" "wordpress" {
       cookies {
         forward = "all"
       }
+      headers = ["Host", "X-Forwarded-Proto"]
     }
   }
 

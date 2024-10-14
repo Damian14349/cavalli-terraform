@@ -3,6 +3,7 @@ resource "aws_launch_configuration" "wordpress_lc" {
   image_id      = var.ami_id
   instance_type = "t3.micro"
   security_groups = [var.sg_id]
+  key_name      = "devopser"
 
   lifecycle {
     create_before_destroy = true
