@@ -24,15 +24,15 @@ variable "existing_sg_name" {
   default     = "allow_http_https"
 }
 
-variable "lambda_bucket" {
-  description = "The S3 bucket where Lambda function code is stored."
-  default     = "lambda-code-bucket"
-}
+# variable "lambda_bucket" {
+#   description = "The S3 bucket where Lambda function code is stored."
+#   default     = "lambda-code-bucket"
+# }
 
-variable "lambda_zip_key" {
-  description = "The key in S3 bucket where Lambda code zip file is stored."
-  default     = "lambda.zip"
-}
+# variable "lambda_zip_key" {
+#   description = "The key in S3 bucket where Lambda code zip file is stored."
+#   default     = "lambda.zip"
+# }
 
 variable "cognito_user_pool_name" {
   description = "The name of the Cognito User Pool."
@@ -46,7 +46,7 @@ variable "cognito_user_pool_client_name" {
 
 variable "db_instance_class" {
   description = "Class of the RDS instance"
-  default     = "db.t3.micro"  # Możesz dostosować do swojego przypadku
+  default     = "db.t3.micro"
 }
 
 variable "db_name" {
@@ -61,5 +61,5 @@ variable "db_user" {
 
 variable "db_password" {
   description = "The password for the database"
-  default     = "password"  # Zaktualizuj zgodnie z wymaganiami
+  default     = "password"
 }

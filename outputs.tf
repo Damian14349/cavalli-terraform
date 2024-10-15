@@ -13,11 +13,6 @@ output "cloudfront_domain_name" {
   value       = module.cloudfront.cf_domain_name
 }
 
-# output "api_gateway_url" {
-#   description = "The URL of the API Gateway."
-#   value       = module.apigateway.api_gateway_url
-# }
-
 output "cognito_user_pool_id" {
   description = "The ID of the Cognito user pool."
   value       = module.cognito.user_pool_id

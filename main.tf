@@ -7,12 +7,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Data source to fetch default VPC
 data "aws_vpc" "default" {
   default = true
 }
 
-# Data source to fetch default subnets
 data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
@@ -20,7 +18,6 @@ data "aws_subnets" "default" {
   }
 }
 
-# Fetch existing ACM certificates
 data "aws_acm_certificate" "alb" {
   domain      = var.domain_name
   statuses    = ["ISSUED"]
@@ -34,7 +31,6 @@ data "aws_acm_certificate" "cloudfront" {
   most_recent = true
 }
 
-# Declare whether to use existing security group
 locals {
   use_existing_sg = var.use_existing_sg
 }
@@ -118,13 +114,9 @@ module "rds" {
   db_name                = var.db_name
   db_user                = var.db_user
   db_password            = var.db_password
-  vpc_security_group_ids = local.use_existing_sg ? [data.aws_security_group.existing_sg[0].id] : [aws_security_group.alb_sg[0].id]  # Zmienna do przekazania SG
-  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name  # Zmienna do przekazania Subnet Group
+  vpc_security_group_ids = local.use_existing_sg ? [data.aws_security_group.existing_sg[0].id] : [aws_security_group.alb_sg[0].id]
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
 }
-
-# module "apigateway" {
-#   source              = "./modules/apigateway"
-# }
 
 module "cognito" {
   source = "./modules/cognito"
