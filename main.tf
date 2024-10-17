@@ -101,11 +101,13 @@ module "cloudfront" {
   alb_origin_dns = module.alb.dns_name
   cert_arn       = data.aws_acm_certificate.cloudfront.arn
   domain_name    = var.domain_name
+  s3_bucket_domain_name = module.s3.bucket_domain_name
 }
 
 module "s3" {
   source      = "./modules/s3"
   domain_name = var.domain_name
+  cloudfront_oai_arn = module.cloudfront.oai_arn
 }
 
 module "rds" {

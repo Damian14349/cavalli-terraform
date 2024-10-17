@@ -6,13 +6,13 @@ resource "aws_s3_bucket" "wordpress_content" {
   }
 }
 
-resource "aws_s3_bucket_website_configuration" "wordpress_content" {
-  bucket = aws_s3_bucket.wordpress_content.id
+# resource "aws_s3_bucket_website_configuration" "wordpress_content" {
+#   bucket = aws_s3_bucket.wordpress_content.id
 
-  index_document {
-    suffix = "index.html"
-  }
-}
+#   index_document {
+#     suffix = "index.html"
+#   }
+# }
 
 resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.wordpress_content.id
@@ -44,6 +44,14 @@ resource "aws_s3_bucket_policy" "wordpress_content_policy" {
         "arn:aws:s3:::${aws_s3_bucket.wordpress_content.id}",
         "arn:aws:s3:::${aws_s3_bucket.wordpress_content.id}/*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${var.cloudfront_oai_arn}"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::${aws_s3_bucket.wordpress_content.id}/*"
     }
   ]
 }
