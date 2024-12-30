@@ -119,7 +119,3 @@ module "rds" {
   vpc_security_group_ids = local.use_existing_sg ? [data.aws_security_group.existing_sg[0].id] : [aws_security_group.alb_sg[0].id]
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
 }
-
-module "cognito" {
-  source = "./modules/cognito"
-}

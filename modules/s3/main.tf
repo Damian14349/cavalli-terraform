@@ -6,14 +6,6 @@ resource "aws_s3_bucket" "wordpress_content" {
   }
 }
 
-# resource "aws_s3_bucket_website_configuration" "wordpress_content" {
-#   bucket = aws_s3_bucket.wordpress_content.id
-
-#   index_document {
-#     suffix = "index.html"
-#   }
-# }
-
 resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.wordpress_content.id
 

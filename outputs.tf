@@ -12,8 +12,3 @@ output "cloudfront_domain_name" {
   description = "The domain name of the CloudFront distribution."
   value       = module.cloudfront.cf_domain_name
 }
-
-output "cognito_user_pool_id" {
-  description = "The ID of the Cognito user pool."
-  value       = module.cognito.user_pool_id
-}
